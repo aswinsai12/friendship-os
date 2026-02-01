@@ -180,13 +180,9 @@ function goToMemories() {
     .then(res => res.json())
     .then(memories => {
 
-        // ✅ ONLY VALID CLOUDINARY IMAGES
         const images = memories
             .map(m => m.imageUrl)
-            .filter(url =>
-                url &&
-                url.startsWith("https://res.cloudinary.com")
-            );
+            .filter(url => url && url.startsWith("https://res.cloudinary.com"));
 
         if (images.length === 0) {
             window.location.href = "/gallery.html";
@@ -199,36 +195,39 @@ function goToMemories() {
 
         let index = 0;
 
+        // ⭐ SHOW FIRST IMAGE IMMEDIATELY
+        img.src = images[0];
+        img.style.opacity = 1;
+        index = 1;
+
         async function showNext() {
-            if (index >= images.length) {
-                window.location.href = "/gallery.html";
-                return;
-            }
+    if (index >= images.length) {
+        window.location.href = "/gallery.html";
+        return;
+    }
 
-            try {
-                await preload(images[index]);
+    await preload(images[index]);
 
-                img.style.opacity = 0;
+    // swap image instantly
+    img.src = images[index];
 
-                setTimeout(() => {
-                    img.src = images[index];
-                    img.style.opacity = 1;
-                }, 300);
+    // force reflow so transition works
+    void img.offsetWidth;
 
-                index++;
-                setTimeout(showNext, 3500);
+    img.style.opacity = 1;
 
-            } catch {
-                // ❌ Bad image → skip
-                console.log("Skipping bad image:", images[index]);
-                index++;
-                showNext();
-            }
-        }
+    setTimeout(() => {
+        img.style.opacity = 0;   // fade out before next
+        index++;
+        setTimeout(showNext, 600);  // wait for fade-out
+    }, 2900);
+}
 
-        showNext();
+        setTimeout(showNext, 3500);
     });
 }
+
+
 
 </script>
 </body>
