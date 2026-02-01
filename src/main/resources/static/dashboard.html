@@ -90,7 +90,7 @@ function loadGallery() {
                 <div>
                     <h3>${mem.title}</h3>
                     <p>${mem.description}</p>
-                    <img src="${mem.imageUrl}">
+                       ${mem.imageUrl ? `<img src="${mem.imageUrl}">` : ``}
                     <button onclick="deleteMemory(${mem.id})">Delete</button>
                     <hr>
                 </div>`;

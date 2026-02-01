@@ -6,6 +6,7 @@ import com.friendshipos.model.Memory;
 import com.friendshipos.repo.MemoryRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,27 +21,37 @@ public class MemoryController {
     private final MemoryRepo memoryRepo;
     private final Cloudinary cloudinary;
 
-    // 📸 Upload Memory
+    // 📸 Upload Memory (Image Optional)
     @PostMapping("/upload")
-    public Memory addMemory(
+    public ResponseEntity<?> uploadMemory(
             @RequestParam String title,
             @RequestParam String description,
-            @RequestParam MultipartFile image) throws Exception {
+            @RequestParam(required = false) MultipartFile image) {
 
-        Map uploadResult = cloudinary.uploader().upload(
-                image.getBytes(),
-                ObjectUtils.asMap("folder", "friendship-os")
-        );
+        String imageUrl = null;
 
-        String imageUrl = uploadResult.get("secure_url").toString();
+        if (image != null && !image.isEmpty()) {
+            try {
+                Map uploadResult = cloudinary.uploader().upload(
+                        image.getBytes(),
+                        ObjectUtils.emptyMap()
+                );
+                imageUrl = uploadResult.get("secure_url").toString();
+            } catch (Exception e) {
+                return ResponseEntity
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Image upload failed");
+            }
+        }
 
-        Memory memory = Memory.builder()
-                .title(title)
-                .description(description)
-                .imageUrl(imageUrl)
-                .build();
+        Memory memory = new Memory();
+        memory.setTitle(title);
+        memory.setDescription(description);
+        memory.setImageUrl(imageUrl); // NULL allowed
 
-        return memoryRepo.save(memory);
+        memoryRepo.save(memory); // ✅ FIXED
+
+        return ResponseEntity.ok("Memory saved");
     }
 
     // 📜 All Memories
@@ -49,18 +60,21 @@ public class MemoryController {
         return memoryRepo.findAll();
     }
 
-    // 🗑 Delete Memory
+    // 🗑 Delete Memory (Safe version)
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteMemory(@PathVariable Long id) throws Exception {
 
         Memory memory = memoryRepo.findById(id).orElse(null);
         if (memory == null) return ResponseEntity.notFound().build();
 
-        String publicId = memory.getImageUrl()
-                .substring(memory.getImageUrl().lastIndexOf("/") + 1)
-                .split("\\.")[0];
+        // Only delete from Cloudinary if image exists
+        if (memory.getImageUrl() != null && memory.getImageUrl().contains("cloudinary")) {
+            String publicId = memory.getImageUrl()
+                    .substring(memory.getImageUrl().lastIndexOf("/") + 1)
+                    .split("\\.")[0];
 
-        cloudinary.uploader().destroy("friendship-os/" + publicId, ObjectUtils.emptyMap());
+            cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+        }
 
         memoryRepo.deleteById(id);
         return ResponseEntity.ok().build();
