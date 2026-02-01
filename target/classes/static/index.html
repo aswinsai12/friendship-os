@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Friendship OS 💙</title>
+    <style>
+        #welcomeScreen {
+    margin-top: 100px;
+}
+#welcomeScreen, #app {
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.hidden {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+button {
+    padding: 12px 20px;
+    background: #4a63e7;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #3649b3;
+}
+
+#futureMsg {
+    font-size: 18px;
+    font-weight: bold;
+    color: #4a63e7;
+}
+.cursor{
+    width:15px;
+    height:15px;
+    background:#4a63e7;
+    border-radius:50%;
+    position:fixed;
+    pointer-events:none;
+}
+
+    </style>
+</head>
+<body>
+<div class="cursor"></div>
+<audio id="bgMusic" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_9f0c88b5f6.mp3?filename=happy-birthday-to-you-piano-version-12599.mp3" type="audio/mp3">
+</audio>
+<button onclick="startApp()">Enter</button>
+
+
+
+<div id="welcomeScreen">
+    <h1>Friendship OS 💙</h1>
+    <p>A small system built from memories, moments and future promises.</p>
+    <button onclick="enterApp()">Enter</button>
+</div>
+
+<div id="app" style="display:none;">
+    <h2>📸 Our Memories</h2>
+    <div id="memories"></div>
+
+    <h2>🎁 Future Message</h2>
+    <button onclick="getFutureMessage()">Unlock Message</button>
+    <p id="futureMsg"></p>
+</div>
+<h2>💌 A Final Note</h2>
+<button onclick="showFinal()">Open Final Message</button>
+<p id="finalMsg" style="display:none; font-size:18px; color:#4a63e7;">
+    No matter where life takes us, this friendship stays permanent 💙
+</p>
+
+
+<script>
+fetch("http://localhost:8080/memory")
+.then(res => res.json())
+.then(data => {
+    let container = document.getElementById("memories");
+    data.forEach(m => {
+        container.innerHTML += `
+            <div class="card">
+                <h3>${m.title}</h3>
+                <p>${m.description}</p>
+                <img src="http://localhost:8080/memory/image/${m.imageName}" />
+            </div>`;
+    });
+});
+function enterApp(){
+    document.getElementById("welcomeScreen").style.display = "none";
+    document.getElementById("app").style.display = "block";
+}
+function getFutureMessage(){
+    fetch("http://localhost:8080/future-message/status")
+    .then(res => res.text())
+    .then(msg => {
+        document.getElementById("futureMsg").innerText = msg;
+    });
+}
+function enterApp(){
+    const welcome = document.getElementById("welcomeScreen");
+    welcome.classList.add("hidden");
+
+    setTimeout(() => {
+        welcome.style.display = "none";
+        document.getElementById("app").style.display = "block";
+    }, 500);
+}
+function startApp(){
+    document.getElementById("bgMusic").play();
+    enterApp();
+}
+
+</script>
+<p style="margin-top:40px; color:#777;">Built with ❤️ by [Your Name]</p>
+
+
+</body>
+</html>

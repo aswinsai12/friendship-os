@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Memories</title>
+</head>
+<body>
+
+<h2>📸 All Memories</h2>
+
+<div th:each="m : ${memories}">
+    <p th:text="${m.message}"></p>
+    <img th:src="@{'/memory/image/' + ${m.imageName}}" width="200"/>
+    <hr>
+</div>
+
+<a href="/dashboard.html">Back</a>
+
+</body>
+</html>

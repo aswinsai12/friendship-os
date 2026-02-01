@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+       <meta charset="UTF-8">
+    <title>Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body { font-family:'Segoe UI'; margin:0; background:linear-gradient(135deg,#667eea,#764ba2); }
+        header { text-align:center; padding:20px; color:white; font-size:26px; font-weight:bold; }
+        .container { max-width:1100px; margin:auto; display:grid; grid-template-columns:1fr 1fr; gap:25px; padding:25px; }
+        .card { background:white; padding:25px; border-radius:15px; box-shadow:0 10px 25px rgba(0,0,0,0.2); }
+        input, textarea { width:100%; padding:12px; margin:10px 0; border-radius:8px; border:1px solid #ddd; }
+        button { width:100%; padding:12px; border:none; border-radius:8px; background:#667eea; color:white; cursor:pointer; }
+        button:hover { background:#5563c1; }
+        .gallery img { width:100%; height:200px; object-fit:cover; border-radius:10px; margin-top:10px; }
+        .card {
+    position: relative;
+    z-index: 2;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    max-width: 500px;
+    width: 90%;
+    margin: auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;   /* ⭐ centers all children horizontally */
+}
+.card input,
+.card textarea,
+.card button {
+    width: 90%;
+}
+
+
+    </style>
+</head>
+
+<body>
+<header>🎛 Admin Dashboard</header>
+
+<div class="container">
+
+    <!-- Upload -->
+    <div class="card">
+        <h2>Add Memory</h2>
+        <form id="uploadForm">
+            <input type="text" name="title" placeholder="Your Name.." required>
+            <textarea name="description" placeholder="Write what you feel about Jyothendra...." required></textarea>
+            <input type="file" name="image" required>
+            <button type="submit">Upload</button>
+        </form>
+    </div>
+
+    <!-- Gallery -->
+    <div class="card">
+        <h2>All Memories</h2>
+        <button onclick="loadGallery()">Load Memories</button>
+        <div id="gallery" class="gallery"></div>
+    </div>
+
+</div>
+
+<script>
+document.getElementById("uploadForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+
+    await fetch("/memory/upload", {
+        method: "POST",
+        body: formData
+    });
+
+    e.target.reset();
+    loadGallery();
+});
+
+function loadGallery() {
+    fetch("/memory/all")
+    .then(res => res.json())
+    .then(data => {
+        const g = document.getElementById("gallery");
+        g.innerHTML = "";
+
+        data.forEach(mem => {
+            g.innerHTML += `
+                <div>
+                    <h3>${mem.title}</h3>
+                    <p>${mem.description}</p>
+                    <img src="${mem.imageUrl}">
+                    <button onclick="deleteMemory(${mem.id})">Delete</button>
+                    <hr>
+                </div>`;
+        });
+    });
+}
+
+function deleteMemory(id) {
+    fetch("/memory/" + id, { method: "DELETE" })
+        .then(() => loadGallery());
+}
+</script>
+</body>
+</html>

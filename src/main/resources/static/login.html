@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happy Birthday</title>
+
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            font-family: Arial, sans-serif;
+        }
+
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #5563c1;
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+
+        .logout {
+            color: green;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-box">
+    <h2>WhatEver login!!!!!!</h2>
+
+    <!-- Spring Security Login Form -->
+    <form method="POST" action="/login">
+        <input type="text" name="username" placeholder="Username" required />
+        <input type="password" name="password" placeholder="Password" required />
+        <button type="submit">Login</button>
+    </form>
+
+    <!-- Error message from Spring -->
+    <div class="error" id="errorMsg"></div>
+    <div class="logout" id="logoutMsg"></div>
+</div>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get("error")) {
+        document.getElementById("errorMsg").innerText = "Invalid username or password.";
+    }
+
+    if (params.get("logout")) {
+        document.getElementById("logoutMsg").innerText = "You have logged out.";
+    }
+</script>
+
+</body>
+</html>
