@@ -1,11 +1,11 @@
-#🎉 Friendship OS — Birthday Memory Web App
+# 🎉 Friendship OS — Birthday Memory Web App
 
 A full-stack web application where friends can upload birthday wishes, messages, and photos, and the birthday person can view them through an animated celebration experience.
 
 Built as a production-ready cloud application with secure storage, database persistence, and image hosting.
 
-##🚀 Live Features
-##🎂 Birthday Entrance Page
+## 🚀 Live Features
+### 🎂 Birthday Entrance Page
 
 Confetti animation
 
@@ -23,7 +23,7 @@ Responsive card layout
 
 Optimized cloud images
 
-##🎛 Admin Dashboard
+## 🎛 Admin Dashboard
 
 Add memory (name + message + image)
 
@@ -31,7 +31,7 @@ View all memories
 
 Delete memories
 
-##🧠 System Architecture
+## 🧠 System Architecture
 
 Frontend (HTML/CSS/JS)
 ⬇
@@ -47,9 +47,9 @@ Hosting	Render
 Containerization	Docker
 Language	Java
 
-##🔐 Security (Production Standard)
+## 🔐 Security (Production Standard)
 
-All secrets are stored as environment variables, not in code.
+### All secrets are stored as environment variables, not in code.
 
 DB_URL
 DB_USER
@@ -61,7 +61,7 @@ CLOUD_SECRET
 
 This prevents API key leaks and follows industry best practices.
 
-##📂 Project Structure
+## 📂 Project Structure
 friendship-os
  ┣ src/main/java/com/friendshipos
  ┃ ┣ controller
@@ -75,7 +75,7 @@ friendship-os
  ┣ pom.xml
  ┗ README.md
 
-##⚙️ How It Works
+## ⚙️ How It Works
 
 User uploads memory → Image sent to Cloudinary
 
@@ -87,7 +87,7 @@ Gallery & slideshow fetch from database
 
 No images stored on server → fully cloud based.
 
-##🐳 Deployment
+## 🐳 Deployment
 
 This project is containerized using Docker.
 
@@ -98,7 +98,7 @@ docker build -t friendship-os .
 
 Deploy to Render with environment variables set.
 
-##📈 Learning Value
+## 📈 Learning Value
 
 This project demonstrates:
 
@@ -115,12 +115,12 @@ Frontend animations
 Full deployment pipeline
 
 
-##👤 Author
+## 👤 Author
 
 Aswin Varma
 Competative Programmer
 
-##💡 Future Improvements
+## 💡 Future Improvements
 
 User authentication
 
