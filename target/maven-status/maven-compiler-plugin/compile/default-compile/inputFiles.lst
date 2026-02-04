@@ -11,6 +11,7 @@ D:\friendship-os\src\main\java\com\friendshipos\service\FutureUnlockService.java
 D:\friendship-os\src\main\java\com\friendshipos\repo\MessageRepo.java
 D:\friendship-os\src\main\java\com\friendshipos\controller\UserController.java
 D:\friendship-os\src\main\java\com\friendshipos\config\CloudinaryConfig.java
+D:\friendship-os\src\main\java\com\friendshipos\config\CacheConfig.java
 D:\friendship-os\src\main\java\com\friendshipos\model\Memory.java
 D:\friendship-os\src\main\java\com\friendshipos\controller\MessageController.java
 D:\friendship-os\src\main\java\com\friendshipos\config\SecurityConfig.java

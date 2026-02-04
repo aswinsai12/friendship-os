@@ -1,6 +1,5 @@
 com\friendshipos\controller\HomeController.class
 com\friendshipos\model\User$UserBuilder.class
-com\friendshipos\controller\MessageController.class
 com\friendshipos\model\Message.class
 com\friendshipos\FriendshipOsApplication.class
 com\friendshipos\controller\SpecialController.class

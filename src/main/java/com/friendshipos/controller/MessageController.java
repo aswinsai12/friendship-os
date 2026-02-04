@@ -1,6 +1,10 @@
 package com.friendshipos.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
+
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.nio.file.*;
@@ -8,17 +12,16 @@ import java.util.*;
 
 import com.friendshipos.model.Message;
 import com.friendshipos.repo.MessageRepo;
-
 @RestController
 @RequestMapping("/messages")
 @RequiredArgsConstructor
 public class MessageController {
 
     private final MessageRepo repo;
-
     private final Path uploadPath = Paths.get("uploads/messages");
 
-    // 📤 Add Message (FRIEND + ADMIN)
+    // 📤 Add Message (WRITE)
+    @CacheEvict(value = "messagesCache", allEntries = true)
     @PostMapping("/add")
     public Message addMessage(
             @RequestParam String senderName,
@@ -39,13 +42,14 @@ public class MessageController {
         return repo.save(msg);
     }
 
-    // 📥 Get All Messages
+    // 📥 Get Messages (READ HEAVY)
+    @Cacheable(value = "messagesCache")
     @GetMapping("/all")
     public List<Message> getAll() {
-        return repo.findAll();
+        return repo.findAll();  // limit rows!
     }
 
-    // 🖼 Image Download
+    // 🖼 Image Download (NO CACHE)
     @GetMapping("/image/{file}")
     public org.springframework.core.io.Resource getImage(@PathVariable String file) throws Exception {
         return new org.springframework.core.io.UrlResource(uploadPath.resolve(file).toUri());
